@@ -2,6 +2,8 @@ class Produtos {
   elements = {
     linkProducts: () => cy.get('a[href="/products"]'),
     listaProdutos: () => cy.get('.features_items .product-image-wrapper'),
+    campoBusca: () => cy.get('#search_product, input[name="search"]'),
+    botaoBuscar: () => cy.get('#submit_search, button[type="submit"]'),
 
     // Detalhes do produto
     nomeProduto: () => cy.get('.product-information h2'),
@@ -23,6 +25,33 @@ class Produtos {
       .within(() => {
         cy.contains(/view product/i).click();
       });
+  }
+
+  // Busca
+  preencherBusca(termo) {
+    this.elements.campoBusca()
+      .should('be.visible')
+      .clear()
+      .type(termo);
+  }
+
+  executarBusca() {
+    this.elements.botaoBuscar()
+      .should('be.visible')
+      .click();
+  }
+
+  buscar(termo) {
+    this.preencherBusca(termo);
+    this.executarBusca();
+  }
+
+  tituloSearchedProducts() {
+    return cy.contains('h2', /Searched Products/i);
+  }
+
+  getResultados() {
+    return this.elements.listaProdutos();
   }
 
   // Getters para a página de detalhes

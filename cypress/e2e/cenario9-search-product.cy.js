@@ -25,17 +25,11 @@ describe('Cenario9 Search Product', () => {
     cy.url().should('include', '/products');
     cy.contains('h2', /All Products/i).should('be.visible');
 
-    // 6. Digitar no campo de busca e clicar em Search
-    cy.get('#search_product, input[name="search"]')
-      .should('be.visible')
-      .clear()
-      .type(termo);
-    cy.get('#submit_search, button[type="submit"]')
-      .should('be.visible')
-      .click();
+    // 6. Digitar no campo de busca e clicar em Search (via módulo)
+    produtos.buscar(termo);
 
-    // 7. Verificar título 'SEARCHED PRODUCTS'
-    cy.contains('h2', /Searched Products/i).should('be.visible');
+  // 7. Verificar título 'SEARCHED PRODUCTS'
+  produtos.tituloSearchedProducts().should('be.visible');
 
     // 8. Verificar que todos os produtos relacionados à busca estão visíveis
     produtos.getListaProdutos()
