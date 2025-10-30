@@ -36,7 +36,12 @@ describe('Cenario6 Contact Us Form', () => {
       // Apenas para registro/validação do alerta (Cypress clica OK automaticamente)
       expect(txt).to.match(/Press OK to proceed/);
     });
-    cy.get('input[type="submit"], button[type="submit"], [data-qa="submit-button"]').click();
+    // Escopar o clique ao formulário de contato para evitar múltiplos matches
+    cy.get('form[action="/contact_us"], form#contact-form, form')
+      .first()
+      .within(() => {
+        cy.get('[data-qa="submit-button"], button[type="submit"], input[type="submit"]').filter(':visible').first().click();
+      });
 
     // 10. Verificar mensagem de sucesso
     cy.contains(/Success! Your details have been submitted successfully\./i)
