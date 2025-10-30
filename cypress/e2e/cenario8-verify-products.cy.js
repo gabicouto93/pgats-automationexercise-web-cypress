@@ -38,7 +38,8 @@ describe('Cenario8 Verify All Products and product detail page', () => {
     produtos.getNomeProduto()
       .should('be.visible')
       .and(($h2) => {
-        expect($h2.text().trim()).to.have.length.greaterThan(0);
+        // Evita uso de encadeamento não suportado (length.greaterThan)
+        expect($h2.text().trim()).to.not.be.empty;
       });
 
     // Categoria
@@ -46,11 +47,12 @@ describe('Cenario8 Verify All Products and product detail page', () => {
       .contains(/Category:/i)
       .should('be.visible');
 
-    // Preço (geralmente aparece como "Rs. 500")
+    // Preço (geralmente aparece como "Rs. 500").
+    // Evita usar spread em jQuery collection (não iterável em todos ambientes).
     produtos.getSpansInfo()
-      .then(($spans) => {
-        const hasRs = [...$spans].some((el) => /Rs\./i.test(el.textContent || ''));
-        expect(hasRs, 'exibe preço com Rs.').to.be.true;
+      .invoke('text')
+      .then((text) => {
+        expect(text, 'exibe preço com Rs.').to.match(/Rs\./i);
       });
 
     // Disponibilidade, Condição, Marca
