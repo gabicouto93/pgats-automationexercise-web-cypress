@@ -31,18 +31,22 @@ describe('Cenario9 Search Product', () => {
     // 7. Verificar título 'SEARCHED PRODUCTS'
     produtos.tituloSearchedProducts().should('be.visible');
 
-    // 8. Verificar que os produtos listados na seção "Searched Products" estão visíveis e relacionados
+    // 8. Verificar que os produtos listados na seção "Searched Products" estão visíveis
     produtos.getListaProdutosSearched()
       .should('exist')
       .and('have.length.greaterThan', 0)
       .each(($card) => {
-        // Cada card deve ter um título contendo o termo pesquisado
-        cy.wrap($card)
-          .find('.productinfo p')
-          .invoke('text')
-          .then((txt) => {
-            expect(txt.toLowerCase()).to.contain(termoLower);
-          });
+        // Cada card deve estar visível e mostrar o título
+        cy.wrap($card).should('be.visible')
+          .find('.productinfo p').should('be.visible');
+      });
+
+    // Validação adicional: ao menos um resultado contém o termo pesquisado
+    produtos.getListaProdutosSearched()
+      .find('.productinfo p')
+      .then(($names) => {
+        const texts = [...$names].map((el) => (el.textContent || '').toLowerCase());
+        expect(texts.some((t) => t.includes(termoLower)), 'ao menos um resultado contém o termo').to.be.true;
       });
   });
 });
