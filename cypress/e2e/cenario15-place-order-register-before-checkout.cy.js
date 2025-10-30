@@ -45,7 +45,8 @@ describe('Cenario15 Place Order: Register before Checkout', () => {
     cy.contains('h2', 'New User Signup!').should('be.visible');
     login.fazerSignup(usuario.nome, usuario.email);
 
-    cy.contains('h2.title', /Enter Account Information/i).should('be.visible');
+  // Garantir navegação correta antes de preencher o formulário
+  cy.url().should('include', '/signup');
     register.preencherInformacoesIniciais('Mr', usuario.nome, usuario.email, usuario.senha, usuario.dataNascimento);
     register.marcarNewsletter();
     register.preencherInformacoesAdicionais(usuario.detalhes);

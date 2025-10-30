@@ -2,7 +2,7 @@ class Register {
     elements = {
         // Elementos da página de registro
         titleMr: () => cy.get('#id_gender1'),
-        password: () => cy.get('input[data-qa="password"]'),
+    password: () => cy.get('input[data-qa="password"], input#password, input[name="password"]'),
         days: () => cy.get('#days'),
         months: () => cy.get('#months'),
         years: () => cy.get('#years'),
@@ -24,9 +24,10 @@ class Register {
     }
 
     preencherInformacoesIniciais(titulo, nome, email, senha, dataNascimento) {
-        // Garantir que o formulário está visível
-        cy.contains('h2.title', /Enter Account Information/i).should('be.visible');
-        
+        // Garantir que estamos na página correta e que campos do formulário estão visíveis
+        cy.url().should('include', '/signup');
+        this.elements.password().should('be.visible');
+
         this.elements.titleMr().click();
         this.elements.password().type(senha, { log: false });
         
