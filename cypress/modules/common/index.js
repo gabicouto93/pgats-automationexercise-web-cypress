@@ -19,6 +19,10 @@ class Common {
         this.elements.navbarSignupLogin().click();
     }
 
+    navegarParaCart() {
+        this.elements.navbarCart().click();
+    }
+
     fazerLogout() {
         this.elements.navbarLogout().click();
     }

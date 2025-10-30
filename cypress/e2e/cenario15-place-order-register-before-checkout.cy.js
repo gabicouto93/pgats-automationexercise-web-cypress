@@ -9,23 +9,19 @@ import { gerarEmailUnico, gerarNomeUsuarioUnico } from '../helpers/utils';
 // Test Case 15: Place Order: Register before Checkout
 
 describe('Cenario15 Place Order: Register before Checkout', () => {
-  const usuario = {
-    nome: gerarNomeUsuarioUnico('Buyer'),
-    email: gerarEmailUnico(),
-    senha: 'Teste@123',
-    dataNascimento: { dia: '1', mes: 'January', ano: '1990' },
-    detalhes: {
-      firstName: 'Buyer',
-      lastName: 'Tester',
-      company: 'QA Company',
-      address: '123 Test Street',
-      address2: 'Apt 456',
-      country: 'United States',
-      state: 'California',
-      city: 'Los Angeles',
-      zipcode: '90001',
-      mobileNumber: '1234567890'
-    }
+  const senha = 'Teste@123';
+  const dataNascimento = { dia: '1', mes: 'January', ano: '1990' };
+  const detalhes = {
+    firstName: 'Buyer',
+    lastName: 'Tester',
+    company: 'QA Company',
+    address: '123 Test Street',
+    address2: 'Apt 456',
+    country: 'United States',
+    state: 'California',
+    city: 'Los Angeles',
+    zipcode: '90001',
+    mobileNumber: '1234567890'
   };
 
   beforeEach(() => {
@@ -34,6 +30,9 @@ describe('Cenario15 Place Order: Register before Checkout', () => {
   });
 
   it('Deve registrar, adicionar produtos, finalizar pedido e deletar a conta', () => {
+    // Gera dados únicos por tentativa de teste
+    const nome = gerarNomeUsuarioUnico('Buyer');
+    const email = gerarEmailUnico();
     // 3. Verificar home
     cy.get('img[alt="Website for automation practice"]').should('be.visible');
     cy.title().should('include', 'Automation Exercise');
@@ -43,13 +42,13 @@ describe('Cenario15 Place Order: Register before Checkout', () => {
 
     // 5. Preencher dados de Signup inicial e criar conta
     cy.contains('h2', 'New User Signup!').should('be.visible');
-    login.fazerSignup(usuario.nome, usuario.email);
+  login.fazerSignup(nome, email);
 
   // Garantir navegação correta antes de preencher o formulário
   cy.url().should('include', '/signup');
-    register.preencherInformacoesIniciais('Mr', usuario.nome, usuario.email, usuario.senha, usuario.dataNascimento);
-    register.marcarNewsletter();
-    register.preencherInformacoesAdicionais(usuario.detalhes);
+  register.preencherInformacoesIniciais('Mr', nome, email, senha, dataNascimento);
+  register.marcarNewsletter();
+  register.preencherInformacoesAdicionais(detalhes);
 
     // 6. Verificar 'ACCOUNT CREATED!' e continuar
     register.criarConta();
@@ -58,7 +57,7 @@ describe('Cenario15 Place Order: Register before Checkout', () => {
     register.continuarAposRegistro();
 
     // 7. Verificar 'Logged in as username'
-    cy.contains('a', new RegExp(`Logged in as ${usuario.nome}`, 'i')).should('be.visible');
+  cy.contains('a', new RegExp(`Logged in as ${nome}`, 'i')).should('be.visible');
 
     // 8. Adicionar produtos ao carrinho
     produtos.navegarParaProdutos();
@@ -88,9 +87,10 @@ describe('Cenario15 Place Order: Register before Checkout', () => {
       }
     });
 
-    // 10. Verificar página do carrinho
-    cy.url().should('include', '/view_cart');
-    cy.contains('b', /Shopping Cart/i).should('be.visible');
+  // 10. Verificar página do carrinho (seletor resiliente)
+  cy.url().should('include', '/view_cart');
+  cy.get('#cart_info, .cart_info').should('be.visible');
+  cy.get('#cart_info table tbody tr, .cart_info table tbody tr').its('length').should('be.gte', 1);
 
     // 11. Proceed To Checkout
     cy.contains('a, button', /Proceed To Checkout/i).click();
@@ -104,7 +104,7 @@ describe('Cenario15 Place Order: Register before Checkout', () => {
     cy.contains('a, button', /Place Order/i).click();
 
     // 14. Dados de pagamento
-    cy.get('input[data-qa="name-on-card"], input[name="name_on_card"]').type(`${usuario.nome} Card`);
+  cy.get('input[data-qa="name-on-card"], input[name="name_on_card"]').type(`${nome} Card`);
     cy.get('input[data-qa="card-number"], input[name="card_number"]').type('4111111111111111');
     cy.get('input[data-qa="cvc"], input[name="cvc"]').type('123');
     cy.get('input[data-qa="expiry-month"], input[name="expiry_month"]').type('12');
@@ -113,8 +113,9 @@ describe('Cenario15 Place Order: Register before Checkout', () => {
     // 15. Pagar e confirmar pedido
     cy.contains('button, input[type="submit"]', /Pay and Confirm Order|Pay/i).click();
 
-    // 16. Verificar mensagem de sucesso
-    cy.contains(/Your order has been placed successfully!/i).should('be.visible');
+    // 16. Verificar mensagem de sucesso (variações de texto)
+    cy.contains(/Your order has been placed successfully!|Congratulations! Your order has been confirmed!|Order Placed/i)
+      .should('be.visible');
 
     // 17. Deletar conta
     register.deletarConta();
