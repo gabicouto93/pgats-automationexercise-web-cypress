@@ -53,28 +53,31 @@ jobs:
       id: cypress-run
 
     - name: Upload de screenshots em caso de falha
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: failure() || success()
       with:
         name: cypress-screenshots
         path: cypress/screenshots
         retention-days: 30
+        if-no-files-found: ignore
 
     - name: Upload de vídeos
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: cypress-videos
         path: cypress/videos
         retention-days: 30
+        if-no-files-found: ignore
 
     - name: Upload de relatórios
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: cypress-reports
         path: cypress/reports
         retention-days: 30
+        if-no-files-found: ignore
 
     - name: Verificar resultado dos testes
       if: steps.cypress-run.outcome != 'success'
