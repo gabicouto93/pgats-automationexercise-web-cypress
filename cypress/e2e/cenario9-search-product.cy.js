@@ -45,8 +45,12 @@ describe('Cenario9 Search Product', () => {
     produtos.getListaProdutosSearched()
       .find('.productinfo p')
       .then(($names) => {
-        const texts = [...$names].map((el) => (el.textContent || '').toLowerCase());
-        expect(texts.some((t) => t.includes(termoLower)), 'ao menos um resultado contém o termo').to.be.true;
+        // Em alguns ambientes a jQuery collection não é iterável com spread; use toArray()
+        const texts = $names.toArray().map((el) => (el.textContent || '').toLowerCase());
+        expect(
+          texts.some((t) => t.includes(termoLower)),
+          `ao menos um resultado contém o termo "${termoLower}"`
+        ).to.be.true;
       });
   });
 });
