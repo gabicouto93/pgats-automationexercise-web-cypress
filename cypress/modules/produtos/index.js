@@ -55,6 +55,14 @@ class Produtos {
     return this.elements.listaProdutos();
   }
 
+  // Lista de produtos apenas dentro da seção "Searched Products"
+  getListaProdutosSearched() {
+    return cy
+      .contains('h2', /Searched Products/i)
+      .parents('.features_items')
+      .find('.product-image-wrapper');
+  }
+
   // Getters para a página de detalhes
   getNomeProduto() {
     return this.elements.nomeProduto();
