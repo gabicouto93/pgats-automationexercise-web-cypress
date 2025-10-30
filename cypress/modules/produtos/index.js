@@ -2,8 +2,9 @@ class Produtos {
   elements = {
     linkProducts: () => cy.get('a[href="/products"]'),
     listaProdutos: () => cy.get('.features_items .product-image-wrapper'),
-    campoBusca: () => cy.get('#search_product, input[name="search"]'),
-    botaoBuscar: () => cy.get('#submit_search, button[type="submit"]'),
+  // Use seletores mais específicos para evitar múltiplos matches
+  campoBusca: () => cy.get('#search_product'),
+  botaoBuscar: () => cy.get('#submit_search'),
 
     // Detalhes do produto
     nomeProduto: () => cy.get('.product-information h2'),
