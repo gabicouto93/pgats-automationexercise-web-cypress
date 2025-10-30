@@ -1,0 +1,2 @@
+Arquivo de upload para o cenário de Contato.
+Enviado automaticamente pelo Cypress durante o teste.
