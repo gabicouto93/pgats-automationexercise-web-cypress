@@ -21,11 +21,13 @@ describe('Cenario6 Contact Us Form', () => {
     // 5. Verificar 'GET IN TOUCH'
     cy.contains('h2', /Get in touch/i).should('be.visible');
 
-    // 6. Preencher nome, email, subject e message
-    cy.get('input[data-qa="name"], input[name="name"]').type('Contact Tester');
-    cy.get('input[data-qa="email"], input[name="email"]').type('contact.tester@test.com');
-    cy.get('input[data-qa="subject"], input[name="subject"]').type('Subject de teste');
-    cy.get('textarea[data-qa="message"], textarea[name="message"]').type('Mensagem de teste via Cypress.');
+    // 6. Preencher nome, email, subject e message (usando fixtures)
+    cy.fixture('dados').then(({ contato }) => {
+      cy.get('input[data-qa="name"], input[name="name"]').type(contato.nome);
+      cy.get('input[data-qa="email"], input[name="email"]').type(contato.email);
+      cy.get('input[data-qa="subject"], input[name="subject"]').type(contato.assunto);
+      cy.get('textarea[data-qa="message"], textarea[name="message"]').type(contato.mensagem);
+    });
 
     // 7. Upload do arquivo (usa fixture criada)
     cy.get('input[type="file"]').selectFile('cypress/fixtures/contact-upload.txt', { force: true });

@@ -26,3 +26,8 @@
 Cypress.Commands.add('openLogin', () => {
   cy.get('a[href="/login"]').click()
 })
+
+// Navegar para a página de Login/Signup (alias mais descritivo)
+Cypress.Commands.add('navegarParaLogin', () => {
+  cy.get('a[href="/login"]').click()
+})

@@ -107,12 +107,14 @@ describe('Cenario15 Place Order: Register before Checkout', () => {
     cy.get('textarea[name="message"], textarea').first().type('Por favor, entregar em horário comercial.');
     cy.contains('a, button', /Place Order/i).click();
 
-    // 14. Dados de pagamento
-  cy.get('input[data-qa="name-on-card"], input[name="name_on_card"]').type(`${nome} Card`);
-    cy.get('input[data-qa="card-number"], input[name="card_number"]').type('4111111111111111');
-    cy.get('input[data-qa="cvc"], input[name="cvc"]').type('123');
-    cy.get('input[data-qa="expiry-month"], input[name="expiry_month"]').type('12');
-    cy.get('input[data-qa="expiry-year"], input[name="expiry_year"]').type('2030');
+    // 14. Dados de pagamento (via fixtures)
+    cy.fixture('dados').then(({ pagamento }) => {
+      cy.get('input[data-qa="name-on-card"], input[name="name_on_card"]').type(pagamento.nomeCartao || `${nome} Card`);
+      cy.get('input[data-qa="card-number"], input[name="card_number"]').type(pagamento.numero);
+      cy.get('input[data-qa="cvc"], input[name="cvc"]').type(pagamento.cvc);
+      cy.get('input[data-qa="expiry-month"], input[name="expiry_month"]').type(pagamento.mes);
+      cy.get('input[data-qa="expiry-year"], input[name="expiry_year"]').type(pagamento.ano);
+    });
 
     // 15. Pagar e confirmar pedido
     cy.contains('button, input[type="submit"]', /Pay and Confirm Order|Pay/i).click();

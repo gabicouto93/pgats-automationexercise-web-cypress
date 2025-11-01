@@ -1,0 +1,15 @@
+{
+  "contato": {
+    "nome": "Contact Tester",
+    "email": "contact.tester@test.com",
+    "assunto": "Subject de teste",
+    "mensagem": "Mensagem de teste via Cypress."
+  },
+  "pagamento": {
+    "nomeCartao": "QA Buyer",
+    "numero": "4111111111111111",
+    "cvc": "123",
+    "mes": "12",
+    "ano": "2030"
+  }
+}
