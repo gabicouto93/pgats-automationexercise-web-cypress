@@ -70,15 +70,19 @@ describe('Cenario15 Place Order: Register before Checkout', () => {
     });
 
     // Modal: continuar comprando
-    cy.contains('button, a', /Continue Shopping/i).should('be.visible').click();
+  cy.contains('button, a', /Continue Shopping/i).should('be.visible').click();
+  // Garantir que o modal foi fechado antes de continuar
+  cy.get('#cartModal').should('not.be.visible');
 
     // Adiciona segundo produto (se existir)
     produtos.getListaProdutos().eq(1).within(() => {
       cy.contains(/add to cart/i).click({ force: true });
     });
 
-    // Modal: ir para o carrinho
-    cy.contains('a, button', /View Cart|Cart/i).click();
+    // Modal: ir para o carrinho (clicar especificamente dentro do modal para evitar elemento coberto)
+    cy.get('#cartModal').should('be.visible').within(() => {
+      cy.contains('a, button', /View Cart/i).click({ force: true });
+    });
 
     // 9. Clicar no botão Cart (fallback via navbar se necessário)
     cy.url().then((url) => {
